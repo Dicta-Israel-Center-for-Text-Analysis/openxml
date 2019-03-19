@@ -125,9 +125,9 @@ function openFromZip(zip, pkg) {
             if (f !== "[Content_Types].xml")
                 f2 = "/" + f;
             //changes are needed here. i think it needs to be:
-            //var newPart = new openXml.OpenXmlPart(pkg, f2, null, null, zipFile.asBinary());
+            var newPart = new openXml.OpenXmlPart(pkg, f2, null, null, zipFile.asBinary());
             
-            var newPart = new openXml.OpenXmlPart(pkg, f2, null, null, zipFile.data);
+            //var newPart = new openXml.OpenXmlPart(pkg, f2, null, null, zipFile.data);
             pkg.parts[f2] = newPart;
 
         }
@@ -323,7 +323,7 @@ function saveToZip(that) {
             else {
                 var cte = that.ctXDoc.getRoot().elements(CT.Override).firstOrDefault(function (e) {
                     return e.attribute("PartName").value === part;
-                });
+                }) || null;
                 if (cte === null) {
                     var extension = part
                         .substring(part.lastIndexOf('.') + 1)
@@ -874,7 +874,7 @@ openXml.OpenXmlPackage.prototype.getContentType = function (uri) {
     ct = this.ctXDoc.descendants(CT.Override)
         .firstOrDefault(function (o) {
             return o.attribute("PartName").value === uri;
-        });
+        }) || null;
     if (ct === null) {
         var exti = uri.lastIndexOf(".");
         var ext = uri.substring(exti + 1);
